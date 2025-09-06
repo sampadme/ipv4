@@ -672,7 +672,6 @@ function ipv4Calculator(ip, cidr) {
     return {
         'IP Info': {
             'IP Address': ip,
-            'Prefix / CIDR': '/' + cidr,
             'IP Class': ipClass,
             'IP Scope / Type': scope,
             'IP in Binary': ipBinary
@@ -702,7 +701,6 @@ function ipv4Calculator(ip, cidr) {
 // Hints for each field (shown when clicking ℹ)
 const ipv4Tips = {
     'IP Address': 'The IPv4 address assigned to the host. Example: 192.168.1.1',
-    'Prefix / CIDR': 'Indicates network bits. Example: /24 = 255.255.255.0. Only a single value (e.g., /24), not a range.',
     'IP Class': 'Determined by first octet. A:1-126, B:128-191, C:192-223, D:224-239, E:240-254',
     'IP Scope / Type': 'Shows if the address is Public, Private, Multicast, Loopback, Link-local, or Experimental.',
     'IP in Binary': 'Convert each octet to 8-bit binary. Example: 192 = 11000000',
@@ -755,7 +753,6 @@ function randomIp() {
 // List of all fields and their sections (order preserved)
 const allFields = [
     ['IP Info', 'IP Address'],
-    ['IP Info', 'Prefix / CIDR'],
     ['IP Info', 'IP Class'],
     ['IP Info', 'IP Scope / Type'],
     ['IP Info', 'IP in Binary'],
@@ -1043,3 +1040,4 @@ updateScore();
 </script>
 </body>
 </html>
+
