@@ -693,7 +693,7 @@ function ipv4Calculator(ip, cidr) {
             'Broadcast Address': broadcast,
             'Next Subnet Address': nextSubnet.join('.'),
             'Total Hosts in Network': totalHostsNetwork,
-            'CIDR Summary': ip + '/' + cidr
+        
         }
     };
 }
@@ -718,7 +718,7 @@ const ipv4Tips = {
     'Hosts per Subnet': '2^(host bits) - 2',
     'Total Hosts in Network': '2^(32-CIDR)',
     'Binary Network Address': 'Network address in binary form',
-    'CIDR Summary': 'Combination of network address and CIDR. Example: 192.168.1.0/24'
+    
 };
 
 // Enable/disable manual IP/CIDR fields based on dropdown
@@ -770,7 +770,7 @@ const allFields = [
     ['Network Info', 'Broadcast Address'],
     ['Network Info', 'Next Subnet Address'],
     ['Network Info', 'Total Hosts in Network'],
-    ['Network Info', 'CIDR Summary']
+    
 ];
 
 // Function to render table rows for all fields
@@ -1040,4 +1040,5 @@ updateScore();
 </script>
 </body>
 </html>
+
 
