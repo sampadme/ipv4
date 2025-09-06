@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPv4 Tool</title>
+<style>
+/* Soft, eye-friendly palette */
+:root {
+    --primary: #4f8a8b;
+    --primary-light: #e0f7fa;
+    --success: #7fd8be;
+    --danger: #ffb6b9;
+    --background: #f6f9f8;
+    --card-bg: #ffffff;
+    --border: #cbe4de;
+    --text: #222b2e;
+    --muted: #7a8c8e;
+    --shadow: 0 1px 4px rgba(79,138,139,0.06);
+    --transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    transition: var(--transition);
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 24px auto 0 auto;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 18px 18px 16px 18px;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    background: var(--primary-light);
+    border-radius: 6px;
+    padding: 0 0 0 0;
+    margin-bottom: 0;
+    min-height: 56px;
+    width: 100%;
+    box-sizing: border-box;
+    animation: fadeInSlide 0.7s;
+    flex-direction: row;
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.input-group label {
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 0;
+    margin-right: 4px;
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+}
+
+.input-group select,
+.input-group input[type="text"],
+.input-group input[type="number"] {
+    width: 200px;
+    max-width: 100%;
+    min-width: 120px;
+    height: 44px;
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.input-group button {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+input, select, button {
+    padding: 0 14px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    font-size: 1rem;
+    transition: var(--transition), box-shadow 0.2s;
+    outline: none;
+    background: var(--card-bg);
+    color: var(--text);
+    min-width: 0;
+    box-sizing: border-box;
+    height: 44px;
+    display: inline-block;
+    margin: 0;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px #b2dfdb;
+}
+
+button, .show-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    min-width: 110px;
+    height: 44px;
+    padding: 0 18px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: var(--transition), transform 0.1s, box-shadow 0.2s;
+    display: inline-block;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(79,138,139,0.08);
+    animation: btnPop 0.5s;
+}
+
+@keyframes btnPop {
+    0% { transform: scale(0.95);}
+    70% { transform: scale(1.05);}
+    100% { transform: scale(1);}
+}
+
+button:hover, button:focus, .show-btn:hover, .show-btn:focus {
+    background: #357376;
+    color: #fff;
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(79,138,139,0.13);
+}
+
+.show-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    min-width: 70px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 0.95rem;
+    margin-left: 10px;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    box-shadow: none;
+    animation: btnPop 0.5s;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.show-btn:first-child {
+    margin-left: 0;
+}
+
+.show-btn:hover, .show-btn:focus {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Flex alignment for Check/Show buttons in table */
+td[data-label="Check / Show"] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    background: var(--card-bg);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.4s;
+    transition: var(--transition);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+th, td {
+    padding: 7px 6px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 0.98rem;
+    transition: var(--transition);
+}
+
+th {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+input.answer {
+    width: 100%;
+    background: #f1f5fa;
+    border: 1px solid var(--border);
+    transition: var(--transition);
+    height: 34px;
+    font-size: 0.98rem;
+    padding: 0 8px;
+}
+
+input.result {
+    width: 100%;
+    background: #e0f2f1;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: var(--transition);
+    height: 34px;
+    font-size: 0.98rem;
+    padding: 0 8px;
+}
+
+.correct {
+    background: #e3fcec !important;
+    border-color: var(--success) !important;
+    animation: correctAnim 0.3s;
+}
+
+@keyframes correctAnim {
+    0% { box-shadow: 0 0 0 0 var(--success);}
+    70% { box-shadow: 0 0 0 6px #e3fcec;}
+    100% { box-shadow: 0 0 0 0 var(--success);}
+}
+
+.wrong {
+    background: #ffeaea !important;
+    border-color: var(--danger) !important;
+    animation: wrongAnim 0.3s;
+}
+
+@keyframes wrongAnim {
+    0% { box-shadow: 0 0 0 0 var(--danger);}
+    70% { box-shadow: 0 0 0 6px #ffeaea;}
+    100% { box-shadow: 0 0 0 0 var(--danger);}
+}
+
+.random-display {
+    text-align: center;
+    margin-bottom: 6px;
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    animation: fadeIn 0.4s;
+    transition: var(--transition);
+}
+
+.hint-icon {
+    cursor: pointer;
+    color: var(--primary);
+    font-weight: bold;
+    margin-left: 4px;
+    font-size: 1em;
+    transition: color 0.2s, transform 0.2s;
+    vertical-align: middle;
+}
+
+.hint-icon:hover {
+    color: #357376;
+    transform: scale(1.07) rotate(5deg);
+}
+
+.hint-text {
+    display: none;
+    background-color: var(--primary-light);
+    border-left: 3px solid var(--primary);
+    padding: 5px 8px;
+    margin-top: 2px;
+    font-size: 0.95em;
+    color: var(--text);
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(79,138,139,0.07);
+    animation: fadeIn 0.3s;
+    max-width: 260px;
+    z-index: 2;
+    position: absolute;
+    transition: var(--transition);
+}
+
+.hint-text.active {
+    display: block;
+}
+
+td {
+    position: relative;
+}
+
+#score {
+    text-align: right;
+    margin-top: 8px;
+    font-size: 1.01rem;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 1px;
+    animation: fadeIn 0.4s;
+    transition: var(--transition);
+}
+
+.score-top, .score-bottom {
+    text-align: right;
+    font-size: 1.01rem;
+    color: var(--primary);
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    margin-top: 0;
+    animation: fadeIn 0.4s;
+    transition: var(--transition);
+}
+
+.score-top {
+    margin-bottom: 12px;
+    margin-top: 0;
+    text-align: center;
+    /* Centered below random IP */
+}
+
+.score-bottom {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* New style for correct "Check" button */
+.btn-correct {
+    background: var(--success) !important;
+    color: #222 !important;
+    border: 1.5px solid var(--success) !important;
+    box-shadow: 0 0 0 2px #e3fcec !important;
+    pointer-events: none;
+    opacity: 1;
+    transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .container {
+        padding: 8px 1vw;
+    }
+    th, td {
+        padding: 5px 2px;
+        font-size: 0.97rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .container {
+        max-width: 99vw;
+        padding: 4px 0.5vw;
+    }
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        min-height: unset;
+        text-align: left;
+        padding: 8px 4px;
+    }
+    .input-group label,
+    .input-group select,
+    .input-group input[type="text"],
+    .input-group input[type="number"],
+    .input-group button {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+    }
+    thead tr {
+        display: none;
+    }
+    tr {
+        margin-bottom: 8px;
+        border-radius: 5px;
+        box-shadow: var(--shadow);
+        background: var(--card-bg);
+        padding: 4px 0;
+    }
+    td {
+        border: none;
+        position: relative;
+        padding-left: 48%;
+        min-height: 32px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    td:before {
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: bold;
+        color: var(--muted);
+        font-size: 0.97em;
+        content: attr(data-label);
+    }
+    input, select, button, .show-btn {
+        font-size: 0.97rem;
+        min-width: 0;
+        width: 100%;
+        height: 34px;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+    #score,
+    .score-top,
+    .score-bottom {
+        text-align: center;
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+    .random-display {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1rem;
+    }
+    .container {
+        padding: 1px 0.2vw;
+    }
+    .random-display {
+        font-size: 0.97rem;
+    }
+    input, select, button, .show-btn {
+        font-size: 0.96rem;
+        height: 30px;
+        padding: 0 6px;
+        width: 100%;
+    }
+    .input-group {
+        padding: 6px 2px;
+        gap: 8px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>IPv4 Tool</h1>
+
+    <!-- IP Selection Section -->
+    <div class="input-group">
+        <label for="ipType">Choose IP Type:</label>
+        <select id="ipType">
+            <option value="random">Random IP</option>
+            <option value="manual">Manual IP</option>
+        </select>
+        <input type="text" id="manualIp" placeholder="Enter IP (if manual)" disabled>
+        <input type="number" id="manualCidr" placeholder="Enter CIDR" disabled>
+        <button id="startCalculsBtn">Start</button>
+    </div>
+
+    <!-- Random IP Display -->
+    <div id="randomDisplay" class="random-display"></div>
+
+    <!-- Score Display (Top) -->
+    <div id="score-top" class="score-top" style="text-align:center;">Score: 0 / 0</div>
+
+    <!-- Calculs Table -->
+    <table id="calculsTable">
+        <thead id="calculsTableHead">
+            <tr>
+                <th>Field</th>
+                <th>Your Answer</th>
+                <th>Check / Show</th>
+                <th>Correct Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows generated by JS -->
+        </tbody>
+    </table>
+
+    <!-- Check All Button and Bottom Start Button side by side -->
+    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+        <button id="checkAllBtn">Check All Answers</button>
+        <button id="startCalculsBtnBottom">ReStart</button>
+    </div>
+    <!-- Score Display (Bottom) -->
+    <div id="score" class="score-bottom"></div>
+
+    <!-- Mini Calculator (moved to bottom) -->
+    <div id="miniCalc" style="margin-bottom:16px; background:#e0f7fa; border-radius:6px; padding:10px 12px; max-width:420px; margin-left:auto; margin-right:auto;">
+        <label for="miniCalcInput" style="font-weight:bold; color:#357376;">Mini Calculator:</label>
+        <input id="miniCalcInput" type="text" placeholder="e.g. 2^8 or 5+3*2" style="width:170px; margin:0 8px 0 8px;">
+        <button id="miniCalcBtn" style="height:32px; min-width:60px; font-size:1rem;">=</button>
+        <span id="miniCalcResult" style="margin-left:10px; font-weight:bold; color:#357376;"></span>
+    </div>
+
+    <!-- Shortcuts section: collapsed by default, very compact horizontal side-by-side -->
+    <div id="shortcuts" style="margin-bottom:8px; background:#e0f7fa; border-radius:7px; padding:0; max-width:920px; margin-left:auto; margin-right:auto;">
+        <div id="shortcuts-header" style="font-weight:600; color:#357376; font-size:0.98rem; margin:0; padding:8px 10px; cursor:pointer; user-select:none; border-radius:7px;">
+            Shortcuts <span id="shortcuts-toggle" style="font-size:1em; margin-left:8px;">&#9654;</span>
+        </div>
+        <div id="shortcuts-content" style="display:none; padding:8px 10px 10px 10px;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between;">
+                <!-- compact card -->
+                <div style="flex:0 0 180px; background:#fff; border-radius:6px; padding:6px 8px; font-size:0.88rem; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                    <div style="font-weight:700; color:#357376; margin-bottom:6px; font-size:0.95rem;">IP → binary</div>
+                    <div style="letter-spacing:1px; text-align:center;">128 64 32 16 8 4 2 1</div>
+                </div>
+
+                <div style="flex:0 0 220px; background:#fff; border-radius:6px; padding:6px 8px; font-size:0.88rem; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                    <div style="font-weight:700; color:#357376; margin-bottom:6px; font-size:0.95rem;">Private IP Ranges</div>
+                    <div style="line-height:1.15;">
+                        <div><b>A:</b> 10.0.0.0 – 10.255.255.255</div>
+                        <div><b>B:</b> 172.16.0.0 – 172.31.255.255</div>
+                        <div><b>C:</b> 192.168.0.0 – 192.168.255.255</div>
+                    </div>
+                </div>
+
+                <!-- condensed CIDR mini-table -->
+                <div style="flex:1 1 420px; min-width:260px; background:#fff; border-radius:6px; padding:6px 8px; font-size:0.86rem; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                    <div style="font-weight:700; color:#357376; margin-bottom:6px; font-size:0.95rem;">CIDR → usable, mask, inc</div>
+                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; align-items:center;">
+                        <div style="font-weight:600; color:#357376;">CIDR</div><div style="font-weight:600; color:#357376;">Usable</div><div style="font-weight:600; color:#357376;">Inc</div>
+                        <div>/30</div><div>2</div><div>4</div>
+                        <div>/29</div><div>6</div><div>8</div>
+                        <div>/28</div><div>14</div><div>16</div>
+                        <div>/27</div><div>30</div><div>32</div>
+                        <div>/26</div><div>62</div><div>64</div>
+                        <div>/25</div><div>126</div><div>128</div>
+                        <div>/24</div><div>254</div><div>256</div>
+                        <div>/23</div><div>510</div><div>512</div>
+                        <div>/22</div><div>1022</div><div>1024</div>
+                        <div>/21</div><div>2046</div><div>2048</div>
+                        <div>/20</div><div>4094</div><div>4096</div>
+                        <div>/16</div><div>65,534</div><div>65,536</div>
+                        <div>/8</div><div>16,777,214</div><div>16,777,216</div>
+                    </div>
+                </div>
+
+                <!-- condensed n → 2^n mini-table -->
+                <div style="flex:0 0 260px; background:#fff; border-radius:6px; padding:6px 8px; font-size:0.86rem; box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                    <div style="font-weight:700; color:#357376; margin-bottom:6px; font-size:0.95rem;">n → 2ⁿ (use)</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; line-height:1.15;">
+                        <div>0 → 1</div><div>/32 host</div>
+                        <div>1 → 2</div><div>/31 p2p</div>
+                        <div>2 → 4</div><div>/30 (2 usable)</div>
+                        <div>3 → 8</div><div>/29 (6 usable)</div>
+                        <div>4 → 16</div><div>/28 (14 usable)</div>
+                        <div>5 → 32</div><div>/27 (30 usable)</div>
+                        <div>6 → 64</div><div>/26 (62 usable)</div>
+                        <div>7 → 128</div><div>/25 (126 usable)</div>
+                        <div>8 → 256</div><div>/24 (254 usable)</div>
+                        <div>9 → 512</div><div>/23 (510 usable)</div>
+                        <div>10 → 1,024</div><div>/22 (1,022 usable)</div>
+                        <div>12 → 4,096</div><div>/20</div>
+                        <div>16 → 65,536</div><div>/16</div>
+                        <div>24 → 16,777,216</div><div>/8</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// filepath: c:\Users\JrSam\Videos\sampad_ipv4_tools.html
+
+// This function calculates all IPv4 details for a given IP and CIDR
+function ipv4Calculator(ip, cidr) {
+    // Split IP into 4 numbers
+    const octets = ip.split('.').map(Number);
+
+    // Calculate subnet mask
+    let mask = [0, 0, 0, 0];
+    for (let i = 0; i < 4; i++) {
+        if (cidr >= (i + 1) * 8) {
+            mask[i] = 255;
+        } else if (cidr > i * 8) {
+            mask[i] = 256 - Math.pow(2, 8 - (cidr - i * 8));
+        }
+    }
+
+    // Calculate network and broadcast addresses
+    const network = octets.map((o, i) => o & mask[i]).join('.');
+    const broadcast = octets.map((o, i) => (o & mask[i]) | (255 - mask[i])).join('.');
+
+    // First and last usable IPs
+    const firstUsable = octets.slice();
+    firstUsable[3] += 1;
+    const lastUsable = octets.map((o, i) => (o & mask[i]) | (255 - mask[i]));
+    lastUsable[3] -= 1;
+
+    // Host bits and usable IPs
+    const hostBits = 32 - cidr;
+    const totalUsable = Math.pow(2, hostBits) - 2;
+
+    // IP Class (A, B, C, D, E)
+    // WRONG: The use of 'A' || 'a' always evaluates to 'A', so the '||' is unnecessary and misleading.
+    // The correct way is just to use the uppercase letter.
+    const ipClass = octets[0] < 128 ? 'A' :
+        octets[0] < 192 ? 'B' :
+        octets[0] < 224 ? 'C' :
+        octets[0] < 240 ? 'D' : 'E' ;
+
+    // Scope/type detection (Public, Private, etc.)
+    // Only assign the capitalized value, but your answer checking logic should accept both cases.
+    let scope = '';
+    if (octets[0] === 10 ||
+        (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) ||
+        (octets[0] === 192 && octets[1] === 168)) {
+        scope = 'Private';
+    } else if (octets[0] === 127) {
+        scope = 'Loopback';
+    } else if (octets[0] === 169 && octets[1] === 254) {
+        scope = 'Link-local';
+    } else if (octets[0] >= 224 && octets[0] <= 239) {
+        scope = 'Multicast';
+    } else if (octets[0] >= 240 && octets[0] <= 254) {
+        scope = 'Experimental';
+    } else {
+        scope = 'Public';
+    }
+
+    // Convert IP and mask to binary strings
+    const ipBinary = octets.map(o => o.toString(2).padStart(8, '0')).join('.');
+    const maskBinary = mask.map(o => o.toString(2).padStart(8, '0')).join('.');
+    const wildcard = mask.map(o => 255 - o).join('.');
+    const networkBinary = octets.map((o, i) => (o & mask[i]).toString(2).padStart(8, '0')).join('.');
+
+    // Next subnet (not used in calculs, but calculated)
+    const nextSubnet = octets.slice();
+    nextSubnet[0] += 1;
+    nextSubnet[1] = 0;
+    nextSubnet[2] = 0;
+    nextSubnet[3] = 0;
+
+    const totalHostsNetwork = Math.pow(2, 32 - cidr);
+
+    // Return all calculated values in sections
+    return {
+        'IP Info': {
+            'IP Address': ip,
+            'Prefix / CIDR': '/' + cidr,
+            'IP Class': ipClass,
+            'IP Scope / Type': scope,
+            'IP in Binary': ipBinary
+        },
+        'Subnet Info': {
+            'Subnet Mask': mask.join('.'),
+            'Subnet Mask in Binary': maskBinary,
+            'Wildcard Mask': wildcard,
+            'Network Bits': Math.min(cidr, 8),
+            'Host Bits': hostBits,
+            'Hosts per Subnet': totalUsable
+        },
+        'Network Info': {
+            'Network Address': network,
+            'Binary Network Address': networkBinary,
+            'First Usable IP': firstUsable.join('.'),
+            'Last Usable IP': lastUsable.join('.'),
+            'Total Usable IPs': totalUsable,
+            'Broadcast Address': broadcast,
+            'Next Subnet Address': nextSubnet.join('.'),
+            'Total Hosts in Network': totalHostsNetwork,
+            'CIDR Summary': ip + '/' + cidr
+        }
+    };
+}
+
+// Hints for each field (shown when clicking ℹ)
+const ipv4Tips = {
+    'IP Address': 'The IPv4 address assigned to the host. Example: 192.168.1.1',
+    'Prefix / CIDR': 'Indicates network bits. Example: /24 = 255.255.255.0. Only a single value (e.g., /24), not a range.',
+    'IP Class': 'Determined by first octet. A:1-126, B:128-191, C:192-223, D:224-239, E:240-254',
+    'IP Scope / Type': 'Shows if the address is Public, Private, Multicast, Loopback, Link-local, or Experimental.',
+    'IP in Binary': 'Convert each octet to 8-bit binary. Example: 192 = 11000000',
+    'Subnet Mask': 'Defines network vs host bits. Example: 255.255.255.0',
+    'Subnet Mask in Binary': 'Binary form of subnet mask. Example: 255.255.255.0 = 11111111.11111111.11111111.00000000',
+    'Wildcard Mask': 'Inverse of subnet mask. Example: 255.255.255.0 → 0.0.0.255',
+    'Network Bits': 'Number of bits for network part (CIDR value)',
+    'Host Bits': 'Number of bits for host part (32 - CIDR)',
+    'Network Address': 'All host bits = 0. Identifies the network.',
+    'First Usable IP': 'Network address + 1',
+    'Last Usable IP': 'Broadcast address - 1',
+    'Total Usable IPs': '2^(host bits) - 2',
+    'Broadcast Address': 'All host bits = 1. Used to broadcast to the network.',
+    'Next Subnet Address': 'Increment network address by subnet size.',
+    'Hosts per Subnet': '2^(host bits) - 2',
+    'Total Hosts in Network': '2^(32-CIDR)',
+    'Binary Network Address': 'Network address in binary form',
+    'CIDR Summary': 'Combination of network address and CIDR. Example: 192.168.1.0/24'
+};
+
+// Enable/disable manual IP/CIDR fields based on dropdown
+document.getElementById('ipType').addEventListener('change', function() {
+    // If manual is selected, enable inputs, else disable
+    const manual = this.value === 'manual';
+    document.getElementById('manualIp').disabled = !manual;
+    document.getElementById('manualCidr').disabled = !manual;
+});
+
+// Start buttons and check all button event listeners
+document.getElementById('startCalculsBtn').addEventListener('click', generateCalculs);
+document.getElementById('startCalculsBtnBottom').addEventListener('click', generateCalculs);
+document.getElementById('checkAllBtn').addEventListener('click', checkAllAnswers);
+
+// Show/hide bottom Start button: always visible
+function showHideBottomStart(isCalculsStarted) {
+    document.getElementById('startCalculsBtnBottom').style.display = '';
+}
+
+// Generate a random IP address (for calculs)
+function randomIp() {
+    // Each octet: 1-223 for first, 0-255 for others
+    return (
+        Math.floor(Math.random() * 223) + 1 + '.' +
+        Math.floor(Math.random() * 256) + '.' +
+        Math.floor(Math.random() * 256) + '.' +
+        Math.floor(Math.random() * 256)
+    );
+}
+
+// List of all fields and their sections (order preserved)
+const allFields = [
+    ['IP Info', 'IP Address'],
+    ['IP Info', 'Prefix / CIDR'],
+    ['IP Info', 'IP Class'],
+    ['IP Info', 'IP Scope / Type'],
+    ['IP Info', 'IP in Binary'],
+    ['Subnet Info', 'Subnet Mask'],
+    ['Subnet Info', 'Subnet Mask in Binary'],
+    ['Subnet Info', 'Wildcard Mask'],
+    ['Subnet Info', 'Network Bits'],
+    ['Subnet Info', 'Host Bits'],
+    ['Subnet Info', 'Hosts per Subnet'],
+    ['Network Info', 'Network Address'],
+    ['Network Info', 'Binary Network Address'],
+    ['Network Info', 'First Usable IP'],
+    ['Network Info', 'Last Usable IP'],
+    ['Network Info', 'Total Usable IPs'],
+    ['Network Info', 'Broadcast Address'],
+    ['Network Info', 'Next Subnet Address'],
+    ['Network Info', 'Total Hosts in Network'],
+    ['Network Info', 'CIDR Summary']
+];
+
+// Function to render table rows for all fields
+function renderCalculsTable(data) {
+    const tbody = document.querySelector('#calculsTable tbody');
+    tbody.innerHTML = '';
+    for (const [section, key] of allFields) {
+        const value = data && data[section] ? data[section][key] : '';
+        const row = document.createElement('tr');
+        row.style.opacity = 1;
+
+        // Field name with hint icon
+        const fieldCell = document.createElement('td');
+        fieldCell.setAttribute('data-label', 'Field');
+        fieldCell.style.whiteSpace = 'nowrap';
+        fieldCell.style.position = 'relative';
+
+        const fieldLabel = document.createElement('span');
+        fieldLabel.innerText = key;
+
+        const hintIcon = document.createElement('span');
+        hintIcon.innerText = ' ℹ';
+        hintIcon.className = 'hint-icon';
+        hintIcon.style.cursor = 'pointer';
+
+        const hintText = document.createElement('div');
+        hintText.className = 'hint-text';
+        hintText.innerText = ipv4Tips[key] || 'No tutorial available';
+
+        hintIcon.onclick = function(e) {
+            document.querySelectorAll('.hint-text.active').forEach(el => {
+                if (el !== hintText) el.classList.remove('active');
+            });
+            hintText.classList.toggle('active');
+            e.stopPropagation();
+        };
+
+        fieldCell.appendChild(fieldLabel);
+        fieldCell.appendChild(hintIcon);
+        fieldCell.appendChild(hintText);
+
+        // User input cell
+        const inputCell = document.createElement('td');
+        inputCell.setAttribute('data-label', 'Your Answer');
+        const input = document.createElement('input');
+        input.className = 'answer';
+        input.dataset.correct = value;
+        input.value = '';
+        input.disabled = false;
+        inputCell.appendChild(input);
+
+        // Check / Show buttons cell
+        const checkCell = document.createElement('td');
+        checkCell.setAttribute('data-label', 'Check / Show');
+        const btnFlex = document.createElement('div');
+        btnFlex.style.display = 'flex';
+        btnFlex.style.alignItems = 'center';
+        btnFlex.style.gap = '10px';
+
+        // Correct answer display cell (hidden by default)
+        const resultCell = document.createElement('td');
+        resultCell.setAttribute('data-label', 'Correct Answer');
+        resultCell.style.display = 'none';
+        const resultInput = document.createElement('input');
+        resultInput.className = 'result';
+        resultInput.readOnly = true;
+        resultCell.appendChild(resultInput);
+
+        // Check button
+        const checkBtn = document.createElement('button');
+        checkBtn.innerText = 'Check';
+        checkBtn.className = 'show-btn';
+        checkBtn.onclick = function() {
+            let userValue = input.value.trim();
+            let correctValue = input.dataset.correct;
+            let isClassField = fieldLabel.innerText === 'IP Class';
+            let isScopeField = fieldLabel.innerText === 'IP Scope / Type';
+            let isCorrect =
+                isClassField
+                    ? userValue.toUpperCase() === correctValue.toUpperCase()
+                : isScopeField
+                    ? userValue.toLowerCase() === correctValue.toLowerCase()
+                : userValue === correctValue;
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                input.classList.remove('wrong');
+                input.disabled = true;
+                checkBtn.classList.add('btn-correct');
+                showBtn.disabled = true;
+                resultCell.style.display = 'none';
+            } else {
+                input.classList.add('wrong');
+                input.classList.remove('correct');
+                input.disabled = true;
+                checkBtn.classList.remove('btn-correct');
+                showBtn.disabled = false;
+                resultInput.value = correctValue;
+                resultCell.style.display = '';
+            }
+            updateScore();
+        };
+
+        // Show button (shows correct answer)
+        const showBtn = document.createElement('button');
+        showBtn.innerText = 'Show';
+        showBtn.className = 'show-btn';
+        showBtn.onclick = function() {
+            input.classList.add('wrong');
+            input.classList.remove('correct');
+            input.disabled = true;
+            checkBtn.classList.remove('btn-correct');
+            resultInput.value = input.dataset.correct;
+            resultCell.style.display = '';
+            updateScore();
+        };
+
+        btnFlex.appendChild(checkBtn);
+        btnFlex.appendChild(showBtn);
+        checkCell.appendChild(btnFlex);
+
+        // Add all cells to row in new order
+        row.appendChild(fieldCell);
+        row.appendChild(inputCell);
+        row.appendChild(checkCell);
+        row.appendChild(resultCell);
+        tbody.appendChild(row);
+    }
+}
+
+// On page load, show all fields with empty answers
+renderCalculsTable(null);
+
+// Main function to generate the calculs table
+function generateCalculs() {
+    // Get type (random/manual), and IP/CIDR values
+    const type = document.getElementById('ipType').value;
+    let ip, cidr;
+
+    if (type === 'random') {
+        ip = randomIp();
+        cidr = Math.floor(Math.random() * (30 - 8 + 1)) + 8; // Random CIDR between 8 and 30
+        document.getElementById('randomDisplay').innerText = `Random IP: ${ip}/${cidr}`;
+    } else {
+        ip = document.getElementById('manualIp').value;
+        cidr = parseInt(document.getElementById('manualCidr').value);
+        document.getElementById('randomDisplay').innerText = '';
+        if (!ip || isNaN(cidr)) {
+            alert('Enter valid IP and CIDR');
+            return;
+        }
+    }
+
+    // Calculate all calculs data
+    window.calculsData = ipv4Calculator(ip, cidr);
+
+    // Render table with correct answers
+    renderCalculsTable(window.calculsData);
+
+    // Hide hints when clicking outside
+    document.body.onclick = function() {
+        document.querySelectorAll('.hint-text.active').forEach(el => el.classList.remove('active'));
+    };
+
+    // Show UI elements after calculs is generated (always visible now)
+    document.getElementById('checkAllBtn').style.display = '';
+    document.getElementById('score-top').style.display = '';
+    document.getElementById('calculsTableHead').style.display = '';
+    showHideBottomStart(true);
+    updateScore();
+}
+
+// Check all answers at once
+function checkAllAnswers() {
+    const inputs = document.querySelectorAll('input.answer');
+    inputs.forEach(input => {
+        if (!input.disabled) {
+            const row = input.parentElement.parentElement;
+            const checkCell = row.children[2];
+            const checkBtn = checkCell.querySelector('button.show-btn');
+            const showBtn = checkCell.querySelectorAll('button.show-btn')[1];
+            const resultCell = row.lastChild;
+            const resultInput = resultCell.firstChild;
+            let userValue = input.value.trim();
+            let correctValue = input.dataset.correct;
+            let fieldName = row.children[0].innerText.trim();
+            let isClassField = fieldName.startsWith('IP Class');
+            let isScopeField = fieldName.startsWith('IP Scope / Type');
+            let isCorrect =
+                isClassField
+                    ? userValue.toUpperCase() === correctValue.toUpperCase()
+                : isScopeField
+                    ? userValue.toLowerCase() === correctValue.toLowerCase()
+                : userValue === correctValue;
+            if (isCorrect) {
+                input.classList.add('correct');
+                input.classList.remove('wrong');
+                input.disabled = true;
+                checkBtn.classList.add('btn-correct');
+                showBtn.disabled = true;
+                resultCell.style.display = 'none';
+            } else {
+                input.classList.add('wrong');
+                input.classList.remove('correct');
+                input.disabled = true;
+                checkBtn.classList.remove('btn-correct');
+                showBtn.disabled = false;
+                resultInput.value = correctValue;
+                resultCell.style.display = '';
+            }
+        }
+    });
+    updateScore();
+}
+
+// Update the score display
+function updateScore() {
+    const inputs = document.querySelectorAll('input.answer');
+    let correctCount = 0;
+    let total = 0;
+    inputs.forEach(input => {
+        if (input.disabled) {
+            total++;
+            if (input.classList.contains('correct')) correctCount++;
+        }
+    });
+    const scoreText = `Score: ${correctCount} / ${total}`;
+    document.getElementById('score').innerText = scoreText;
+    document.getElementById('score-top').innerText = scoreText;
+}
+
+// Mini Calculator logic
+document.getElementById('miniCalcBtn').onclick = function() {
+    const input = document.getElementById('miniCalcInput').value.trim();
+    let expr = input.replace(/\^/g, '**'); // Replace ^ with **
+    let result = '';
+    try {
+        // Only allow numbers, (), +, -, *, /, ., and **
+        if (/^[\d\s\+\-\*\/\.\(\)\^]+$/.test(input)) {
+            // eslint-disable-next-line no-eval
+            result = eval(expr);
+        } else {
+            result = 'Invalid';
+        }
+    } catch {
+        result = 'Error';
+    }
+    document.getElementById('miniCalcResult').innerText = result;
+};
+
+// Collapse/expand Shortcuts section
+document.getElementById('shortcuts-header').onclick = function() {
+    var content = document.getElementById('shortcuts-content');
+    var toggle = document.getElementById('shortcuts-toggle');
+    if (content.style.display === 'none') {
+        content.style.display = '';
+        toggle.innerHTML = '&#9660;';
+    } else {
+        content.style.display = 'none';
+        toggle.innerHTML = '&#9654;';
+    }
+};
+
+// Initial score display
+updateScore();
+
+</script>
+</body>
+</html>
