@@ -37,7 +37,7 @@ h1 {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1080px;
     margin: 24px auto 0 auto;
     background: var(--card-bg);
     border-radius: 8px;
@@ -52,7 +52,7 @@ h1 {
 .input-group {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     gap: 12px;
     background: var(--primary-light);
@@ -303,7 +303,8 @@ input.result {
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(79,138,139,0.07);
     animation: fadeIn 0.3s;
-    max-width: 260px;
+    max-width: 640px;
+    text-wrap: auto;
     z-index: 2;
     position: absolute;
     transition: var(--transition);
@@ -1040,5 +1041,6 @@ updateScore();
 </script>
 </body>
 </html>
+
 
 
