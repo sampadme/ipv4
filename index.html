@@ -182,8 +182,14 @@ button:hover, button:focus, .show-btn:hover, .show-btn:focus {
 td[data-label="Check / Show"] {
     display: flex;
     align-items: center;
-    gap: 10px;
-    min-width: 160px;
+    gap: 0; /* no gap between buttons and correct answer */
+    min-width: 60px; /* reduce min-width */
+    width: 7%; /* make this column narrower */
+}
+
+/* Make Correct Answer column wider */
+td[data-label="Correct Answer"] {
+    width: 30%; /* increased width */
 }
 
 table {
@@ -204,11 +210,22 @@ table {
 }
 
 th, td {
-    padding: 7px 6px;
+    padding: 6px 4px; /* slightly reduced horizontal padding */
     border-bottom: 1px solid var(--border);
     text-align: left;
     font-size: 0.98rem;
     transition: var(--transition);
+}
+
+/* Make Field column compact and allow wrapping */
+td[data-label="Field"] {
+    width: 18%; /* changed from 22% to 18% */
+    white-space: normal;
+}
+
+/* Make Your Answer column wider */
+td[data-label="Your Answer"] {
+    width: 35%; /* changed from 58% to 35% */
 }
 
 th {
@@ -222,13 +239,13 @@ tr:last-child td {
 }
 
 input.answer {
-    width: 100%;
+    width: 98%; /* slightly less than 100% to avoid overflow */
     background: #f1f5fa;
     border: 1px solid var(--border);
     transition: var(--transition);
-    height: 34px;
-    font-size: 0.98rem;
-    padding: 0 8px;
+    height: 38px; /* slightly taller */
+    font-size: 1.04rem; /* slightly larger font */
+    padding: 0 10px; /* slightly reduced padding */
 }
 
 input.result {
@@ -281,7 +298,7 @@ input.result {
     cursor: pointer;
     color: var(--primary);
     font-weight: bold;
-    margin-left: 4px;
+    margin-left: 2px; /* less space between label and icon */
     font-size: 1em;
     transition: color 0.2s, transform 0.2s;
     vertical-align: middle;
